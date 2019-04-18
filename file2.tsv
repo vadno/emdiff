@@ -1,0 +1,77 @@
+# newdoc
+# newpar
+# sent_id = 1
+# text = A törpe víziló jobban alkalmazkodott a szárazföldi életmódhoz, de ez is a vizek közelében él, mivel bőrét nedvesen kell tartania, továbbá a víz csökkenti a testhőmérsékletét.
+1	A	a	DET	_	Definite=Def|PronType=Art	2	det	_	_
+2	törpe	törp	NOUN	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=Sing|Person[psor]=3	5	nsubj	_	_
+3	víziló	víziló	ADJ	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None|VerbForm=PartPres	4	amod:att	_	_
+4	jobban	job	ADV	_	_	5	advmod:mode	_	_
+5	alkalmazkodott	alkalmazkod	VERB	_	Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act	0	root	_	_
+6	a	a	DET	_	Definite=Def|PronType=Art	8	det	_	_
+7	szárazföldi	szárazföldi	ADJ	_	Case=Nom|Degree=Pos|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	8	amod:att	_	_
+8	életmódhoz	életmód	NOUN	_	Case=All|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	5	nmod:obl	_	SpaceAfter=No
+9	,	,	PUNCT	_	_	16	punct	_	_
+10	de	de	CCONJ	_	_	16	cc	_	_
+11	ez	ez	PRON	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person=3|Person[psor]=None|PronType=Dem	16	nsubj	_	_
+12	is	is	CCONJ	_	_	11	cc	_	_
+13	a	a	DET	_	Definite=Def|PronType=Art	15	det	_	_
+14	vizek	viz	ADJ	_	Case=Nom|Degree=Pos|Number=Plur	15	amod:att	_	_
+15	közelében	közel	NOUN	_	Case=Ine|Number=Sing|Number[psed]=None|Number[psor]=Sing|Person[psor]=3	16	nmod:obl	_	_
+16	él	él	VERB	_	Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act	5	conj	_	SpaceAfter=No
+17	,	,	PUNCT	_	_	16	punct	_	_
+18	mivel	mivel	SCONJ	_	_	21	mark	_	_
+19	bőrét	bőre	NOUN	_	Case=Acc|Number=Sing|Number[psor]=Sing|Person[psor]=3	20	obj	_	_
+20	nedvesen	nedves	ADJ	_	Case=Ess|Degree=Pos|Number=Sing	21	obl	_	_
+21	kell	kell	VERB	_	Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act	16	advcl	_	_
+22	tartania	tart	VERB	_	Number=Sing|Person=3|Tense=Pres|VerbForm=Inf|Voice=Act	21	xcomp	_	SpaceAfter=No
+23	,	,	PUNCT	_	_	21	punct	_	_
+24	továbbá	továbbá	ADV	_	_	27	advmod:mode	_	_
+25	a	a	DET	_	Definite=Def|PronType=Art	26	det	_	_
+26	víz	víz	NOUN	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	27	nsubj	_	_
+27	csökkenti	csökkent	VERB	_	Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act	5	conj	_	_
+28	a	a	DET	_	Definite=Def|PronType=Art	29	det	_	_
+29	testhőmérsékletét	testhőmérséklet	NOUN	_	Case=Acc|Number=Sing|Number[psed]=None|Number[psor]=Sing|Person[psor]=3	27	obj	_	SpaceAfter=No
+30	.	.	PUNCT	_	_	5	punct	_	_
+
+# sent_id = 2
+# text = A párzás és az ellés egyaránt megtörténhet a vízben vagy a szárazon.
+1	A	a	DET	_	Definite=Def|PronType=Art	2	det	_	_
+2	párzás	párzás	NOUN	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	7	nsubj	_	_
+3	és	és	CCONJ	_	_	5	cc	_	_
+4	az	a	DET	_	Definite=Def|PronType=Art	5	det	_	_
+5	ellés	ellés	NOUN	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	2	conj	_	_
+6	egyaránt	egyaránt	ADV	_	_	7	advmod:mode	_	_
+7	megtörténhet	megtörténik	VERB	_	Definite=Ind|Mood=Pot|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	_
+8	a	a	DET	_	Definite=Def|PronType=Art	9	det	_	_
+9	vízben	víz	NOUN	_	Case=Ine|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	7	nmod:obl	_	_
+10	vagy	vagy	CCONJ	_	_	12	cc	_	_
+11	a	a	DET	_	Definite=Def|PronType=Art	12	det	_	_
+12	szárazon	száraz	NOUN	_	Case=Sup|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	9	conj	_	SpaceAfter=No
+13	.	.	PUNCT	_	_	7	punct	_	_
+
+# sent_id = 3
+# text = Növényevő állatként a törpe víziló számos növényi eredetű táplálékot fogyaszt, többek között páfrányokat, széleslevelű növényeket, füveket és gyümölcsöket.
+1	Növényevő	Növényevő	ADJ	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None|VerbForm=PartPres	2	amod:att	_	_
+2	állatként	állat	NOUN	_	Case=Abs|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	10	nmod:obl	_	_
+3	a	a	DET	_	Definite=Def|PronType=Art	4	det	_	_
+4	törpe	törp	NOUN	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=Sing|Person[psor]=3	10	nsubj	_	_
+5	víziló	víziló	ADJ	_	Case=Nom|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None|VerbForm=PartPres	9	amod:att	_	_
+6	számos	számos	DET	_	Definite=Ind|PronType=Ind	9	det	_	_
+7	növényi	növényi	ADJ	_	Case=Nom|Degree=Pos|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	9	amod:att	_	_
+8	eredetű	eredetű	ADJ	_	Case=Nom|Degree=Pos|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	9	amod:att	_	_
+9	táplálékot	táplálék	NOUN	_	Case=Acc|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	10	obj	_	_
+10	fogyaszt	fogyaszt	VERB	_	Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act	0	root	_	SpaceAfter=No
+11	,	,	PUNCT	_	_	14	punct	_	_
+12	többek	több	DET	_	Definite=Ind|PronType=Ind	14	det	_	_
+13	között	között	ADP	_	_	12	case	_	_
+14	páfrányokat	páfrány	NOUN	_	Case=Acc|Number=Plur|Number[psed]=None|Number[psor]=None|Person[psor]=None	10	conj	_	SpaceAfter=No
+15	,	,	PUNCT	_	_	17	punct	_	_
+16	széleslevelű	széleslevelű	ADJ	_	Case=Nom|Degree=Pos|Number=Sing|Number[psed]=None|Number[psor]=None|Person[psor]=None	17	amod:att	_	_
+17	növényeket	növény	NOUN	_	Case=Acc|Number=Plur|Number[psed]=None|Number[psor]=None|Person[psor]=None	10	conj	_	SpaceAfter=No
+18	,	,	PUNCT	_	_	19	punct	_	_
+19	füveket	füv	NOUN	_	Case=Acc|Number=Plur|Number[psed]=None|Number[psor]=None|Person[psor]=None	10	conj	_	_
+20	és	és	CCONJ	_	_	21	cc	_	_
+21	gyümölcsöket	gyümölcs	NOUN	_	Case=Acc|Number=Plur|Number[psed]=None|Number[psor]=None|Person[psor]=None	10	conj	_	SpaceAfter=No
+22	.	.	PUNCT	_	_	10	punct	_	SpacesAfter=\n
+
+
