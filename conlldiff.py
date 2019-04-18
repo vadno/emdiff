@@ -38,20 +38,27 @@ def diff_inline(conll1, conll2, col):
             if val1 == val2:
                 tp += 1
 
-    print(tp)
-    print((tp / len(conll1)) * 100)
+    return "{:.2%}".format(tp / len(conll1))
 
 
 def main():
     conll1 = read_file(sys.argv[1])
     conll2 = read_file(sys.argv[2])
 
-    diff_inline(conll1, conll2, 'id')
-    diff_inline(conll1, conll2, 'form')
-    diff_inline(conll1, conll2, 'lemma')
-    diff_inline(conll1, conll2, 'upos')
-    diff_inline(conll1, conll2, 'xpos')
-    diff_inline(conll1, conll2, 'feats')
+    if diff_inline(conll1, conll2, 'id') != 100:
+        print('eltérő id probléma')
+    else:
+        print('id OK')
+
+    if diff_inline(conll1, conll2, 'form') != 100:
+        print('eltérő token probléma')
+    else:
+        print('tokenek OK')
+
+    print('lemma accuracy: ', diff_inline(conll1, conll2, 'lemma'))
+    print('upos accuracy: ', diff_inline(conll1, conll2, 'upos'))
+    print('xpos accuracy: ', diff_inline(conll1, conll2, 'xpos'))
+    print('feats accuracy: ', diff_inline(conll1, conll2, 'feats'))
 
 
 if __name__ == "__main__":
