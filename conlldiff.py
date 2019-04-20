@@ -12,10 +12,10 @@ def read_file(filename):
 
     lines = list()
 
-    with open(filename, 'r') as inf:
+    with open(filename, encoding='UTF-8') as inf:
         for line in inf:
             if not line.startswith('#'):
-                new_line = line.split()
+                new_line = line.strip().split()
                 if not new_line:
                     add_line = conll_line._make(new_sent)
                 else:
@@ -30,14 +30,14 @@ def diff_inline(conll1, conll2, col):
     tp = 0
 
     if len(conll1) != len(conll2):
-        print('eltérő tokenizálás')
+        print('eltérő tokenizálás')  # TODO: Esetleg ez? https://docs.python.org/3/library/difflib.html
     else:
         for c1, c2 in zip(conll1, conll2):
-            val1 = getattr(c1, col)
+            val1 = getattr(c1, col)  # TODO: Mivel nincs default megadva lehetne c1.col is! Az olvashatóbb!
             val2 = getattr(c2, col)
             if val1 == val2:
                 tp += 1
-
+            # TODO: Esetleg ez? https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html#sklearn.metrics.precision_recall_fscore_support
     return "{:.2%}".format(tp / len(conll1))
 
 
@@ -61,5 +61,5 @@ def main():
     print('feats accuracy: ', diff_inline(conll1, conll2, 'feats'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
