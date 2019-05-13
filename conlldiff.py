@@ -10,15 +10,14 @@ conll_line = namedtuple('CoNLL', 'id, form, lemma, upos, xpos, feats, head, depr
 
 def read_file(filename):
 
-    lines = list()
-    new_sent = list([' '] * 10)
+    lines = []
 
     with open(filename, encoding='UTF-8') as inf:
         for line in inf:
             if not line.startswith('#'):
                 new_line = line.strip().split()
-                if not new_line:
-                    new_line = new_sent
+                if len(new_line) == 0:
+                    new_line = [[' '] * 10]  # Default value (recreated each time when needed)
                 lines.append(conll_line._make(new_line))
 
     return lines
@@ -33,10 +32,10 @@ def align(delta, conll1, conll2):
 
     while i < len(conll1) and i < len(conll2):
 
-        if delta[i].startswith('+'):
+        if delta[i].startswith('+ '):
             plus += 1
             conll1.insert(i, conll_line._make(dummy))
-        elif delta[i].startswith('-'):
+        elif delta[i].startswith('- '):
             minus += 1
             conll2.insert(i, conll_line._make(dummy))
 
@@ -60,7 +59,7 @@ def diff_inline(conll1, conll2, col):
     total = 0
     tp = 0
     for c1, c2 in zip(conll1, conll2):
-        val1 = getattr(c1, col)  # TODO: Mivel nincs default megadva lehetne c1.col is! Az olvashatóbb!
+        val1 = getattr(c1, col)  # col is dynamically specified (see function parameters)
         val2 = getattr(c2, col)
         if val1 != 'DUMMY' and val2 != 'DUMMY':
             if val1 == val2:
