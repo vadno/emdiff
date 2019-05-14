@@ -59,6 +59,24 @@ class CoNLLDiff:
         self.matching_blocks = self.opcodes = None
         self._orig_token2 = len(self.b)
 
+    def print_a(self, out_stream=sys.stdout, print_dummies=False):
+        for line in self.a:
+            if isinstance(line, self.conll_line):
+                print('\t'.join(line), file=out_stream)
+            elif print_dummies and isinstance(line, self.extremal.DUMMY):
+                print('DUMMY')
+            else:
+                print(file=out_stream)
+
+    def print_b(self, out_stream=sys.stdout, print_dummies=False):
+        for line in self.b:
+            if isinstance(line, self.conll_line):
+                print('\t'.join(line), file=out_stream)
+            elif print_dummies and isinstance(line, self.extremal.DUMMY):
+                print('DUMMY')
+            else:
+                print(file=out_stream)
+
     def _read_file(self, filename):
         lines = []
 
@@ -112,7 +130,7 @@ class CoNLLDiff:
     def align(self, alo=0, ahi=None, blo=0, bhi=None):
         self.get_opcodes(alo, ahi, blo, bhi)
         aligned = zip(*self._align_gen(self.a[alo:ahi], self.b[blo:bhi]))  # Align by the opcodes gained on form
-        self.aligned_a, self.aligned_b = aligned
+        self.aligned_a, self.aligned_b = aligned  # TODO: Maybe overwrite original content in favour of alingment?
         return aligned
 
     def _align_gen(self, conll1, conll2):
