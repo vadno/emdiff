@@ -23,7 +23,6 @@ def differ(filea, fileb):
 
     while r < len(result):
 
-        # TODO így csak a form-okat hasonlítjuk össze!! legyen benne mindkét fájl összes oszlopa
         if result[r].startswith('+ '):
             zipline = ('+', fileb[b])
             b += 1
