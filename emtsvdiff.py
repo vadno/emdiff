@@ -2,139 +2,195 @@
 # -*- coding: utf-8 -*-
 """
     author: Noémi Vadász
-    last update: 2019.10.09.
+    last update: 2019.11.19.
 
 """
 import csv
 import sys
-import difflib
+import eval
+import diff
+import agree
+import argparse
 
 
-def differ(filea, fileb):
+FIELD_MAP = {
+    'form': 'tokendiff',
+    'lemma': 'tageval',
+    'xpostag': 'tageval',
+    'upostag': 'tageval',
+    'feats': 'tageval',
+    'NP-BIO': 'chunkeval',
+    'NER-BIO': 'chunkeval',
+    'id': 'depeval',
+}
 
-    diff = difflib.Differ()
-    # TODO nem biztos, hogy az [1] oszlopban van a form! a fájlbeolvasásnál kellene csekkolni
-    result = list(diff.compare([line[1] for line in filea], [line[1] for line in fileb]))
 
-    zipped = list()
-    r = 0
-    a = 0
-    b = 0
+def get_column(header, field):
 
-    while r < len(result):
+    return [key for key in header.keys() if (header[key] == field)][0]
 
-        if result[r].startswith('+ '):
-            zipline = ('+', fileb[b])
-            b += 1
-        elif result[r].startswith('- '):
-            zipline = (filea[a], '-')
-            a += 1
-        else:
-            zipline = (filea[a], fileb[b])
-            a += 1
-            b += 1
 
-        zipped.append(zipline)
-        r += 1
+def proc_fields(a_fields, b_fields):
+    """
+    feldolgozza a két fájl fejlécét
+    veszi a metszetüket
+    eltárolja, hogy hányadik oszlopban vannak az egyes mezők a fájlokban
+    :param a_fields:
+    :param b_fields:
+    :return:
+    """
 
-    return zipped
+    # közös mezők a fejlécben
+    common_fields = set(a_fields.values()) | set(b_fields.values())
+
+    columns = dict()
+    for field in common_fields:
+        columns[field] = (get_column(a_fields, field), get_column(b_fields, field))
+
+    return columns
+
+
+def get_tasks(columns):
+    """
+
+    :param columns:
+    :return:
+    """
+    # feladatok a mezőknek megfeleltetve
+    tasks = dict()
+    for field, cols in columns.items():
+        if field in FIELD_MAP:
+            tasks[cols] = FIELD_MAP[field]
+
+    return tasks
+
+
+def get_header(infile):
+
+    with open(infile, 'r') as inf:
+        header = {i: name for i, name in enumerate(inf.readline().strip().split())}
+
+    return header
 
 
 def read_file(infile):
+    """
+    beolvassa a fájl a csv readerrel
+    elmenti
+    skippeli a mondathatárokat
+    TODO mondatonként is el kéne tárolni a dependencia kiértékeléséhez
+    :param infile:
+    :return:
+    """
 
     lines = list()
 
-    with open(infile) as inf:
+    with open(infile, 'r') as inf:
+
+        # itt csak beolvassa a headert de nem menti el (már megvan)
+        inf.readline().strip().split()
+
         reader = csv.reader(inf, delimiter='\t', quoting=csv.QUOTE_NONE)
 
         for line in reader:
             if len(line) > 1 and '#' not in line[0]:
                 lines.append(line)
-            elif len(line) == 0:
-                lines.append('')
+            # elif len(line) == 0:
+            #     lines.append('')
             else:
                 pass
 
     return lines
 
 
-def count_token(diff):
-
-    filea = len(diff)
-    fileb = len(diff)
-    for line in diff:
-        if line[0] == '+':
-            filea -= 1
-        elif line[1] == '-':
-            fileb -= 1
-
-    print('file_a token number', filea)
-    print('file_b token number', fileb)
-
-
-def diff_tokens(diff):
-
-    filea = list()
-    fileb = list()
-
-    for line in diff:
-        if line[0] == '+':
-            fileb.append(line[1][1])
-        elif line[1] == '-':
-            filea.append(line[0][1])
-
-    print('file_a tokens', filea)
-    print('file_b tokens', fileb)
-
-
-def diff_tags(diff):
-    # TODO itt csak kitesztelem a szófajcímkét, de legyen dinamikus az oszlop
-
-    total = 0
-    tp = 0
-
-    for line in diff:
-        if line[0] != '+' and line[1] != '-':
-            if line[0][3] == line[1][3]:
-                tp += 1
-            total += 1
-
-    print('POS accuracy: {0:.2%}'.format(tp/total))
-
-    """
-    teszt FEATS
-    """
-
-    total = 0
-    tp = 0
-
-    for line in diff:
-        if line[0] != '+' and line[1] != '-':
-            if line[0][5] == line[1][5]:
-                tp += 1
-            total += 1
-
-    print('FEATS accuracy: {0:.2%}'.format(tp / total))
-
-
-def print_stats(diff):
-
-    count_token(diff)
-    diff_tokens(diff)
-    diff_tags(diff)
-
-
 def main():
+    """
+    - beolvassa a fájlokat                                                  DONE
+    - kiszedi, hogy melyik fájlban melyik mező melyik oszlopban van         DONE
+        ha különböző sorrendben vannak, egységesíti                         DONE
+    - megállapítja a mezők metszetét                                        DONE
+    - megkérdezi a felhasználót, hogy mi a feladat                          HALF DONE
+    - a kért feladatot végrehajtja a meglévő mezőkre                        HALF DONE
 
-    filea = sys.argv[1]
-    fileb = sys.argv[2]
+                        diff            eval            agree
+    form                DONE            -               -
+    lemma               -               DONE            DONE
+    xpostag             -               DONE            DONE
+    upostag             -               DONE            DONE
+    feats               -               DONE            DONE
+    id, head, deprel    -               TODO            TODO
+    NP-BIO              -               TODO            TODO
+    NER-BIO             -               TODO            TODO
 
+    :return:
+    """
+
+    # megkérdezi a felhasználüt, hogy melyik üzemmódot szeretné
+    # beszedi a két össszehasonlítandó fájl relatív elérését
+    parser = argparse.ArgumentParser(description='A tutorial of argparse!')
+    parser.add_argument("-m", "--mode", required=True, action="append", help="Select mode! (diff, eval, agree)", default=[])
+    parser.add_argument("-f1", "--file1", required=True, type=str, help="File 1")
+    parser.add_argument("-f2", "--file2", required=True, type=str, help="File 2")
+
+    args = parser.parse_args()
+
+    mode = args.mode
+
+    filea = args.file1
+    fileb = args.file2
+
+    # kinyeri a két fálj fejlécét
+    a_fields = get_header(filea)
+    b_fields = get_header(fileb)
+    # elmenti, hogy a közös mezők melyik oszlopban vannak a fájlokban (lehet, hogy különböznek!)
+    columns = proc_fields(a_fields, b_fields)
+    print(columns)
+
+    # beolvassa a két fájl
     filea_lines = read_file(filea)
     fileb_lines = read_file(fileb)
 
-    diff = differ(filea_lines, fileb_lines)
+    # elkészíti a deltát, ahol meg vannak jelölve a tokenkülönbségek
+    # ehhez a 'form' oszlopot használja
+    delta = diff.differ(filea_lines, fileb_lines, columns['form'])
+    diff.diff_tokens(delta, columns['form'])
+    diff.count_token(delta)
 
-    print_stats(diff)
+    if "diff" in mode:
+        pass
+
+    if "eval" in mode:
+        # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
+        tasks = get_tasks(columns)
+        # az egyes feladatokat elvégzi a megfelelő mezőkkel
+        for column, task in tasks.items():
+            if task == 'tageval':
+                # TODO írja ki a mező nevét
+                eval.diff_tags(delta, column)
+
+            if task == 'chunkeval':
+                # NP-BIO
+                # NER-BIO
+                eval.diff_chunks(delta, column)
+
+            if task == 'depeval':
+                # id        ha van id, akkor indul a depeval
+                # head      ezt az oszlopot meg kell keresni
+                # deprel    ezt az oszlopot meg kell keresni
+                head = columns['head']
+                deprel = columns['deprel']
+                eval.diff_deps(delta, column, head, deprel)
+
+    if "agree" in mode:
+        # agreement a tokenenkénti címkézési feladatokra
+        print('agree lemma')
+        agree.agree_tags(delta, columns['lemma'])
+        print('agree xpostag')
+        agree.agree_tags(delta, columns['xpostag'])
+        print('agree upostag')
+        agree.agree_tags(delta, columns['upostag'])
+        print('agree feats')
+        agree.agree_tags(delta, columns['feats'])
 
 
 if __name__ == "__main__":
