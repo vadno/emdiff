@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 """
     author: Noémi Vadász
-    last update: 2019.11.19.
+    last update: 2020.01.10.
 
 """
 import csv
-import sys
 import eval
 import diff
 import agree
@@ -22,6 +21,7 @@ FIELD_MAP = {
     'NP-BIO': 'chunkeval',
     'NER-BIO': 'chunkeval',
     'id': 'depeval',
+    'term': 'termeval'
 }
 
 
@@ -70,10 +70,10 @@ def get_header(infile):
     with open(infile, 'r') as inf:
         header = {i: name for i, name in enumerate(inf.readline().strip().split())}
 
-    return header
+    return header, len(header)
 
 
-def read_file(infile):
+def read_file(infile, length):
     """
     beolvassa a fájl a csv readerrel
     elmenti
@@ -95,12 +95,17 @@ def read_file(infile):
         for line in reader:
             if len(line) > 1 and '#' not in line[0]:
                 lines.append(line)
-            # elif len(line) == 0:
-            #     lines.append('')
+            elif len(line) == 0:
+                lines.append(['newsent'] * length)
             else:
                 pass
 
     return lines
+
+
+def get_column_name(columns, key):
+
+    return list(columns.keys())[list(columns.values()).index(key)]
 
 
 def main():
@@ -112,66 +117,64 @@ def main():
     - megkérdezi a felhasználót, hogy mi a feladat                          HALF DONE
     - a kért feladatot végrehajtja a meglévő mezőkre                        HALF DONE
 
-                        diff            eval            agree
-    form                DONE            -               -
-    lemma               -               DONE            DONE
-    xpostag             -               DONE            DONE
-    upostag             -               DONE            DONE
-    feats               -               DONE            DONE
-    id, head, deprel    -               TODO            TODO
-    NP-BIO              -               TODO            TODO
-    NER-BIO             -               TODO            TODO
-
     :return:
     """
 
-    # megkérdezi a felhasználüt, hogy melyik üzemmódot szeretné
+    # megkérdezi a felhasználót, hogy melyik üzemmódot szeretné
     # beszedi a két össszehasonlítandó fájl relatív elérését
-    parser = argparse.ArgumentParser(description='A tutorial of argparse!')
-    parser.add_argument("-m", "--mode", required=True, action="append", help="Select mode! (diff, eval, agree)", default=[])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--mode", required=True, action="append", help="Select mode! (eval, agree)",
+                        default=[])
     parser.add_argument("-f1", "--file1", required=True, type=str, help="File 1")
     parser.add_argument("-f2", "--file2", required=True, type=str, help="File 2")
 
     args = parser.parse_args()
-
     mode = args.mode
-
     filea = args.file1
     fileb = args.file2
 
     # kinyeri a két fálj fejlécét
-    a_fields = get_header(filea)
-    b_fields = get_header(fileb)
+    a_fields, a_length = get_header(filea)
+    b_fields, b_length = get_header(fileb)
     # elmenti, hogy a közös mezők melyik oszlopban vannak a fájlokban (lehet, hogy különböznek!)
     columns = proc_fields(a_fields, b_fields)
-    print(columns)
+    # print(columns)
 
     # beolvassa a két fájl
-    filea_lines = read_file(filea)
-    fileb_lines = read_file(fileb)
+    filea_lines = read_file(filea, a_length)
+    fileb_lines = read_file(fileb, b_length)
 
     # elkészíti a deltát, ahol meg vannak jelölve a tokenkülönbségek
     # ehhez a 'form' oszlopot használja
     delta = diff.differ(filea_lines, fileb_lines, columns['form'])
-    diff.diff_tokens(delta, columns['form'])
-    diff.count_token(delta)
+    # diff.count_token(delta)
+    # diff.diff_tokens(delta)
 
-    if "diff" in mode:
-        pass
-
-    if "eval" in mode:
+    """
+    lemma                   DONE
+    xpostag                 DONE
+    upostag                 DONE
+    feats                   DONE
+    id, head, deprel        
+    NP-BIO                  
+    NER-BIO                 
+    zéróelem                
+    term                    
+    """
+    if 'eval' in mode:
         # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
         tasks = get_tasks(columns)
         # az egyes feladatokat elvégzi a megfelelő mezőkkel
         for column, task in tasks.items():
-            if task == 'tageval':
-                # TODO írja ki a mező nevét
-                eval.diff_tags(delta, column)
-
-            if task == 'chunkeval':
-                # NP-BIO
-                # NER-BIO
-                eval.diff_chunks(delta, column)
+            # if task == 'tageval':
+            #     # kiírja, hogy épp melyik oszlop kiértékeléséről van szó
+            #     print(get_column_name(columns, column))
+            #     eval.diff_tags(delta, column)
+            #
+            # if task == 'chunkeval':
+            #     # NP-BIO
+            #     # NER-BIO
+            #     eval.diff_chunks(delta, column)
 
             if task == 'depeval':
                 # id        ha van id, akkor indul a depeval
@@ -181,7 +184,18 @@ def main():
                 deprel = columns['deprel']
                 eval.diff_deps(delta, column, head, deprel)
 
-    if "agree" in mode:
+    """
+    lemma                   DONE
+    xpostag                 DONE
+    upostag                 DONE
+    feats                   DONE
+    id, head, deprel        
+    NP-BIO                  
+    NER-BIO
+    zéróelem                
+    term                  
+    """
+    if 'agree' in mode:
         # agreement a tokenenkénti címkézési feladatokra
         print('agree lemma')
         agree.agree_tags(delta, columns['lemma'])
