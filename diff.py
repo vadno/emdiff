@@ -20,6 +20,7 @@ def differ(filea, fileb, column):
     r = 0
     a = 0
     b = 0
+    zipline = tuple()
 
     while r < len(result):
 
@@ -57,15 +58,14 @@ def count_token(delta):
         elif line[1] == '-':
             fileb -= 1
 
-    # print('file_a token number', filea)
-    # print('file_b token number', fileb)
+    print('file_a token number:', filea)
+    print('file_b token number:', fileb)
 
 
-def diff_tokens(delta, column):
+def diff_tokens(delta):
     """
     listázza a csak az egyik vagy csak a másik fájlban szereplő tokeneket
     :param delta:
-    :param column:
     :return:
     """
 
@@ -74,9 +74,9 @@ def diff_tokens(delta, column):
 
     for line in delta:
         if line[0] == '+':
-            fileb.append(line[1][column])
+            fileb.append(line[1][0])
         elif line[1] == '-':
-            filea.append(line[0][column])
+            filea.append(line[0][0])
 
-    # print('file_a tokens', filea)
-    # print('file_b tokens', fileb)
+    print('file_a tokens', filea)
+    print('file_b tokens', fileb)
