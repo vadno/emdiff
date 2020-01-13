@@ -1,8 +1,20 @@
-import nltk.chunk
-import nltk.parse.evaluate
-import nltk.chunk.util
+from sklearn import metrics
 
-def diff_tags(delta, column):
+
+def eval_tags_bytag(delta, column):
+
+    gold = list()
+    pred = list()
+
+    for line in delta:
+        if line[0] != '+' and line[1] != '-':
+            gold.append(line[0][column[0]])
+            pred.append(line[1][column[1]])
+
+    print(metrics.classification_report(gold, pred))
+
+
+def eval_tags(delta, column):
     """
     lemma
     xpostag
@@ -24,10 +36,11 @@ def diff_tags(delta, column):
                 pass
             total += 1
 
-    print('accuracy: {0:.2%}'.format(tp/total))
+    # accuracy = num_tokens_correct / total_num_tokens_from_gold
+    return tp/total
 
 
-def diff_chunks(delta, column):
+def eval_chunks(delta, column):
     """
     emNer címkék:
         B begin
@@ -47,15 +60,86 @@ def diff_chunks(delta, column):
         I-NP in
         1-NP egyelemű
         O-NP out
+
+    chunker-evaluation: IOB-accuracy, prec, rec, f1
+
+    accuracy: the total number of tokens (NOT CHUNKS!!) that are guessed correctly with the POS tags and IOB tags,
+    then divided by the total number of tokens in the gold sentence
+    accuracy = num_tokens_correct / total_num_tokens_from_gold
+
+    TP: the number of chunks (NOT TOKENS!!!) that are guessed correctly
+    FP: the number of chunks (NOT TOKENS!!!) that are guessed but they are wrong
+    TN: the number of chunks (NOT TOKENS!!!) that are not guessed by the system
+    prec = tp / fp + tp
+    reca = tp / fn + tp
+    f1 = 2 * (prec * rec / (prec + rec))
+
     :param delta:
     :param column:
     :return:
     """
 
+    # meroszamok
+    total_tok = 0
+    tp_tok = 0
+    # azert listak, hogy tipusonkent is meg lehessen szamolni a NER-t
+    tp_chunk = list()
+    fn_chunk = list()
+    fp_chunk = list()
+    # lepteto a tobbelemu chunkokhoz
+    further = False
+
     for line in delta:
+        # csak az egyforma tokenizalasu sorokat nezzuk
         if line[0] != '+' and line[1] != '-':
+            total_tok += 1
+            # egyforma cimke tokenenkent az accuracy-hoz
             if line[0][column[0]] == line[1][column[1]]:
-                print(line[0][column[0]])
+                tp_tok += 1
+
+            # egyelemu chunkok
+            if line[0][column[0]].startswith('1-') and line[1][column[1]].startswith('1-'):
+                tp_chunk.append(line[0][column[0]].split('-')[1])
+            elif line[0][column[0]].startswith('1-') and not line[1][column[1]].startswith('1-'):
+                fn_chunk.append(line[0][column[0]].split('-')[1])
+            elif not line[0][column[0]].startswith('1-') and line[1][column[1]].startswith('1-'):
+                fp_chunk.append(line[1][column[1]].split('-')[1])
+
+            # tobbelemu chunkok eleje
+            elif line[0][column[0]].startswith('B-') and line[1][column[1]].startswith('B-'):
+                further = True
+            elif line[0][column[0]].startswith('B-') and not line[1][column[1]].startswith('B-'):
+                fn_chunk.append(line[0][column[0]].split('-')[1])
+
+            # tobbelemu chunkok kozepe
+            elif line[0][column[0]].startswith('I-') and line[1][column[1]].startswith('I-') and further:
+                further = True
+            elif line[0][column[0]].startswith('I-') and not line[1][column[1]].startswith('I-'):
+                fn_chunk.append(line[0][column[0]].split('-')[1])
+
+            # tobbelemu chunkok vege
+            elif line[0][column[0]].startswith('E-') and line[1][column[1]].startswith('E-') and further:
+                further = False
+                tp_chunk.append(line[0][column[0]].split('-')[1])
+            elif line[0][column[0]].startswith('E-') and not line[1][column[1]].startswith('E-') and further:
+                further = False
+                fp_chunk.append(line[0][column[0]].split('-')[1])
+            elif not line[0][column[0]].startswith('E-') and line[1][column[1]].startswith('E-') and further:
+                fn_chunk.append(line[0][column[0]].split('-')[1])
+                further = False
+
+    prec = None
+    rec = None
+    f1 = None
+
+    acc = tp_tok/total_tok
+
+    if tp_chunk:
+        prec = len(tp_chunk) / (len(fp_chunk) + len(tp_chunk))
+        rec = len(tp_chunk) / (len(fn_chunk) + len(tp_chunk))
+        f1 = 2 * (prec * rec / (prec + rec))
+
+    return acc, prec, rec, f1
 
 
 def process_sentence(sent, head, deprel):
@@ -79,11 +163,10 @@ def process_sentence(sent, head, deprel):
             if line[0][deprel[0]] == line[1][deprel[1]]:
                 corrl += 1
 
-    print('LAS: ', str(corrl/total))
-    print('UAS: ', str(corr/total))
+    return corrl / total, corr / total
 
 
-def diff_deps(delta, column, head, deprel):
+def eval_deps(delta, column, head, deprel):
     """
     kiértékeli a függőségi elemzést
     :param delta:
@@ -118,4 +201,6 @@ def diff_deps(delta, column, head, deprel):
             sent = list()
 
     if sent:
-        process_sentence(sent, head, deprel)
+        las, uas = process_sentence(sent, head, deprel)
+
+    return las, uas
