@@ -1,0 +1,25 @@
+form	lemma	xpostag	NP-BIO	upostag	feats	NER-BIO	id	deprel	head	cons
+Falunk	fal	[/N][Poss.1Pl][Nom]	B-NP	NOUN	Case=Nom|Number=Sing|Number[psor]=Plur|Person[psor]=1	O	1	ATT	2	(ROOT(CP(NP*)
+szerben	szer	[/N][Ine]	I-NP	NOUN	Case=Ine|Number=Sing	B-MISC	2	OBL	3	(NP*)
+mellékeres	mellékeres	[/Adj][Nom]	I-NP	ADJ	Case=Nom|Degree=Pos|Number=Sing	I-MISC	3	ATT	4	(NP*)
+ágyúszót	ágyúszó	[/N][Acc]	E-NP	NOUN	Case=Acc|Number=Sing	E-MISC	4	ROOT	0	(NP*)
+.	.	[Punct]	O	PUNCT	_	O	5	PUNCT	0	*))
+										
+Nyestem	nyes	[/V][Pst.NDef.1Sg]	O	VERB	Definite=Ind|Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin|Voice=Act	1-LOC	1	ROOT	0	(ROOT(CP(NP*)
+megint	megint	[/Adv]	O	ADV	_	O	2	MODE	3	(ADVP*)
+törtet	törtet	[/V][Prs.NDef.3Sg]	O	VERB	Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act	O	3	ATT	1	(NP*)
+kissé	kissé	[/Adv]	O	ADV	_	O	4	MODE	3	(ADVP*)
+.	.	[Punct]	O	PUNCT	_	O	5	PUNCT	0	*))
+										
+Jóska	Jóska	[/N][Nom]	1-NP	PROPN	Case=Nom|Number=Sing	1-PER	1	SUBJ	2	(ROOT(CP(NP*)
+henent	henegy	[/V][Pst.NDef.3Sg]	O	VERB	Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act	O	2	ROOT	0	(NP*)
+egyet	egyet	[/Prev]	O	ADV	_	O	3	MODE	2	(NP*)
+a	a	[/Det|Art.Def]	B-NP	DET	Definite=Def|PronType=Art	B-ORG	4	DET	5	(NP*
+Parlamentben	parlament	[/N][Ine]	E-NP	NOUN	Case=Ine|Number=Sing	E-ORG	5	OBL	2	*)
+.	.	[Punct]	O	PUNCT	_	O	6	PUNCT	0	*))
+										
+A	a	[/Det|Art.Def]	B-NP	DET	Definite=Def|PronType=Art	B-MISC	1	DET	2	(ROOT(CP(NP*
+vrátosz	vrátosz	[/N][Nom]	E-NP	NOUN	Case=Nom|Number=Sing	I-MISC	2	SUBJ	3	*)
+lejunkolta	lejunkol	[/V][Pst.Def.3Sg]	O	VERB	Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act	E-MISC	3	ROOT	0	(NP*)
+blágrót	blágró	[/N][Acc]	1-NP	NOUN	Case=Acc|Number=Sing	O	4	OBJ	3	(NP*)
+.	.	[Punct]	O	PUNCT	_	O	5	PUNCT	0	*))
