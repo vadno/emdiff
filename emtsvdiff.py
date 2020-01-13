@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
     author: Noémi Vadász
-    last update: 2020.01.10.
+    last update: 2020.01.13.
 
 """
 import csv
@@ -13,15 +13,16 @@ import argparse
 
 
 FIELD_MAP = {
-    'form': 'tokendiff',
-    'lemma': 'tageval',
-    'xpostag': 'tageval',
-    'upostag': 'tageval',
-    'feats': 'tageval',
-    'NP-BIO': 'chunkeval',
-    'NER-BIO': 'chunkeval',
-    'id': 'depeval',
-    'term': 'termeval'
+    'form': {'tokendiff'},
+    'lemma': {'tagacc'},
+    'xpostag': {'tageval', 'tagacc'},
+    'upostag': {'tageval', 'tagacc'},
+    'feats': {'tageval'},
+    'NP-BIO': {'chunkeval'},
+    'NER-BIO': {'chunkeval'},
+    'id': {'depeval'},
+    'cons': {'tageval'}  # ,
+    # 'term': 'termeval'
 }
 
 
@@ -80,6 +81,7 @@ def read_file(infile, length):
     skippeli a mondathatárokat
     TODO mondatonként is el kéne tárolni a dependencia kiértékeléséhez
     :param infile:
+    :param length
     :return:
     """
 
@@ -96,6 +98,7 @@ def read_file(infile, length):
             if len(line) > 1 and '#' not in line[0]:
                 lines.append(line)
             elif len(line) == 0:
+                # egy csupa 'newsent'-et tartalmazo lista hatarolja a mondatokat
                 lines.append(['newsent'] * length)
             else:
                 pass
@@ -114,8 +117,8 @@ def main():
     - kiszedi, hogy melyik fájlban melyik mező melyik oszlopban van         DONE
         ha különböző sorrendben vannak, egységesíti                         DONE
     - megállapítja a mezők metszetét                                        DONE
-    - megkérdezi a felhasználót, hogy mi a feladat                          HALF DONE
-    - a kért feladatot végrehajtja a meglévő mezőkre                        HALF DONE
+    - megkérdezi a felhasználót, hogy mi a feladat                          DONE
+    - a kért feladatot végrehajtja a meglévő mezőkre                        DONE
 
     :return:
     """
@@ -136,7 +139,7 @@ def main():
     # kinyeri a két fálj fejlécét
     a_fields, a_length = get_header(filea)
     b_fields, b_length = get_header(fileb)
-    # elmenti, hogy a közös mezők melyik oszlopban vannak a fájlokban (lehet, hogy különböznek!)
+    # elmenti, hogy a közös mezők melyik oszlopban vannak a fájlokban (lehet, hogy különböző oszlopban vannak!)
     columns = proc_fields(a_fields, b_fields)
     # print(columns)
 
@@ -155,34 +158,43 @@ def main():
     xpostag                 DONE
     upostag                 DONE
     feats                   DONE
-    id, head, deprel        
-    NP-BIO                  
-    NER-BIO                 
-    zéróelem                
-    term                    
+    id, head, deprel        DONE
+    NP-BIO                  DONE
+    NER-BIO                 DONE
+    zéróelem                TODO
+    term                    TODO
     """
     if 'eval' in mode:
         # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
         tasks = get_tasks(columns)
         # az egyes feladatokat elvégzi a megfelelő mezőkkel
         for column, task in tasks.items():
-            # if task == 'tageval':
-            #     # kiírja, hogy épp melyik oszlop kiértékeléséről van szó
-            #     print(get_column_name(columns, column))
-            #     eval.diff_tags(delta, column)
-            #
-            # if task == 'chunkeval':
-            #     # NP-BIO
-            #     # NER-BIO
-            #     eval.diff_chunks(delta, column)
+            if 'tagacc' in task:
+                colname = get_column_name(columns, column)
+                tagacc = eval.eval_tags(delta, column)
+                print(colname, 'accuracy: {0:.2%}'.format(tagacc))
 
-            if task == 'depeval':
+            # if 'tageval' in task:
+            #     print(get_column_name(columns, column))
+            #     eval.eval_tags_bytag(delta, column)
+
+            if 'chunkeval' in task:
+                colname = get_column_name(columns, column)
+                acc, prec, rec, f1 = eval.eval_chunks(delta, column)
+                print(colname, 'IOB-accuracy: {0:.2%}'.format(acc))
+                print(colname, 'precision: {0:.2%}'.format(prec))
+                print(colname, 'recall: {0:.2%}'.format(rec))
+                print(colname, 'f-measure: {0:.2%}'.format(f1))
+
+            if 'depeval' in task:
                 # id        ha van id, akkor indul a depeval
                 # head      ezt az oszlopot meg kell keresni
                 # deprel    ezt az oszlopot meg kell keresni
                 head = columns['head']
                 deprel = columns['deprel']
-                eval.diff_deps(delta, column, head, deprel)
+                las, uas = eval.eval_deps(delta, column, head, deprel)
+                print('dependency', 'LAS: {0:.2%}'.format(las))
+                print('dependency', 'UAS: {0:.2%}'.format(uas))
 
     """
     lemma                   DONE
