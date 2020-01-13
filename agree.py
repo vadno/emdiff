@@ -8,9 +8,8 @@ def coeff(annot_data):
     az annotálandó elemek listája, ahol az egyes elemek
     háromelemű listák, ahol
         az első elem az annotátor azonosítója
-        a második elem a szóalak (ennek egyeznie kell TODO?)
+        a második elem a szóalak
         a harmadik elem a címke
-    TODO ez csak az egytokenes taggelésre jó?
     :return:
     """
     print(annot_data)
