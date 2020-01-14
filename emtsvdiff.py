@@ -9,6 +9,7 @@ import csv
 import eval
 import diff
 import agree
+import zeroeval
 import argparse
 
 
@@ -126,7 +127,7 @@ def main():
     # megkérdezi a felhasználót, hogy melyik üzemmódot szeretné
     # beszedi a két össszehasonlítandó fájl relatív elérését
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--mode", required=True, action="append", help="Select mode! (eval, agree)",
+    parser.add_argument("-m", "--mode", required=True, action="append", help="Select mode! (eval, zeroeval, agree)",
                         default=[])
     parser.add_argument("-f1", "--file1", required=True, type=str, help="File 1")
     parser.add_argument("-f2", "--file2", required=True, type=str, help="File 2")
@@ -167,16 +168,18 @@ def main():
     if 'eval' in mode:
         # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
         tasks = get_tasks(columns)
+
         # az egyes feladatokat elvégzi a megfelelő mezőkkel
         for column, task in tasks.items():
+
             if 'tagacc' in task:
                 colname = get_column_name(columns, column)
                 tagacc = eval.eval_tags(delta, column)
                 print(colname, 'accuracy: {0:.2%}'.format(tagacc))
 
-            # if 'tageval' in task:
-            #     print(get_column_name(columns, column))
-            #     eval.eval_tags_bytag(delta, column)
+            if 'tageval' in task:
+                print(get_column_name(columns, column))
+                eval.eval_tags_bytag(delta, column)
 
             if 'chunkeval' in task:
                 colname = get_column_name(columns, column)
@@ -195,6 +198,16 @@ def main():
                 las, uas = eval.eval_deps(delta, column, head, deprel)
                 print('dependency', 'LAS: {0:.2%}'.format(las))
                 print('dependency', 'UAS: {0:.2%}'.format(uas))
+
+    if 'zeroeval' in mode:
+
+        prec, rec, f1 = zeroeval.eval_zero(delta, columns['id'])
+        if prec and rec and f1:
+            print('precision: {0:.2%}'.format(prec))
+            print('recall: {0:.2%}'.format(rec))
+            print('f-measure: {0:.2%}'.format(f1))
+        else:
+            print('hiányzó érték')
 
     """
     lemma                   DONE
