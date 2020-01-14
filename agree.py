@@ -12,7 +12,7 @@ def coeff(annot_data):
         a harmadik elem a címke
     :return:
     """
-    print(annot_data)
+    # print(annot_data)
 
     task = AnnotationTask(data=annot_data)
     print('percentage of agreement, observed agreement')

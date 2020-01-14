@@ -183,6 +183,8 @@ def eval_deps(delta, column, head, deprel):
 
     sent = list()
     tokenerror = False
+    las = None
+    uas = None
 
     for line in delta:
 
