@@ -2,28 +2,26 @@
 # -*- coding: utf-8 -*-
 """
     author: Noémi Vadász
-    last update: 2020.01.13.
+    last update: 2020.01.15.
 
 """
 import csv
 import eval
 import diff
 import agree
-import zeroeval
 import argparse
 
 
 FIELD_MAP = {
     'form': {'tokendiff'},
-    'lemma': {'tagacc'},
-    'xpostag': {'tageval', 'tagacc'},
-    'upostag': {'tageval', 'tagacc'},
-    'feats': {'tageval'},
+    'lemma': {'tagacc', 'tagagree'},
+    'xpostag': {'tageval', 'tagacc', 'tagagree'},
+    'upostag': {'tageval', 'tagacc', 'tagagree'},
+    'feats': {'tageval', 'tagacc', 'tagagree'},
     'NP-BIO': {'chunkeval'},
     'NER-BIO': {'chunkeval'},
-    'id': {'depeval'},
-    'cons': {'tageval'}  # ,
-    # 'term': 'termeval'
+    'id': {'depeval', 'depagree'},
+    'cons': {'tageval', 'tagacc', 'tagagree'}
 }
 
 
@@ -79,8 +77,7 @@ def read_file(infile, length):
     """
     beolvassa a fájl a csv readerrel
     elmenti
-    skippeli a mondathatárokat
-    TODO mondatonként is el kéne tárolni a dependencia kiértékeléséhez
+    a mondathatárokra 'newsent'-ek listáját teszi
     :param infile:
     :param length
     :return:
@@ -114,12 +111,12 @@ def get_column_name(columns, key):
 
 def main():
     """
-    - beolvassa a fájlokat                                                  DONE
-    - kiszedi, hogy melyik fájlban melyik mező melyik oszlopban van         DONE
-        ha különböző sorrendben vannak, egységesíti                         DONE
-    - megállapítja a mezők metszetét                                        DONE
-    - megkérdezi a felhasználót, hogy mi a feladat                          DONE
-    - a kért feladatot végrehajtja a meglévő mezőkre                        DONE
+    - beolvassa a fájlokat
+    - kiszedi, hogy melyik fájlban melyik mező melyik oszlopban van
+        ha különböző sorrendben vannak, egységesíti
+    - megállapítja a mezők metszetét
+    - megkérdezi a felhasználót, hogy mi a feladat
+    - a kért feladatot végrehajtja a meglévő mezőkre
 
     :return:
     """
@@ -154,17 +151,6 @@ def main():
     # diff.count_token(delta)
     # diff.diff_tokens(delta)
 
-    """
-    lemma                   DONE
-    xpostag                 DONE
-    upostag                 DONE
-    feats                   DONE
-    id, head, deprel        DONE
-    NP-BIO                  DONE
-    NER-BIO                 DONE
-    zéróelem                TODO
-    term                    TODO
-    """
     if 'eval' in mode:
         # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
         tasks = get_tasks(columns)
@@ -190,18 +176,18 @@ def main():
                 print(colname, 'f-measure: {0:.2%}'.format(f1))
 
             if 'depeval' in task:
-                # id        ha van id, akkor indul a depeval
                 # head      ezt az oszlopot meg kell keresni
                 # deprel    ezt az oszlopot meg kell keresni
                 head = columns['head']
                 deprel = columns['deprel']
-                las, uas = eval.eval_deps(delta, column, head, deprel)
-                print('dependency', 'LAS: {0:.2%}'.format(las))
-                print('dependency', 'UAS: {0:.2%}'.format(uas))
+                las, uas = eval.eval_deps(delta, head, deprel)
+                print('dependency evaluation')
+                print('LAS: {0:.2%}'.format(las))
+                print('UAS: {0:.2%}'.format(uas))
 
     if 'zeroeval' in mode:
 
-        prec, rec, f1 = zeroeval.eval_zero(delta, columns['id'])
+        prec, rec, f1 = eval.eval_zero(delta, columns['id'])
         if prec and rec and f1:
             print('precision: {0:.2%}'.format(prec))
             print('recall: {0:.2%}'.format(rec))
@@ -209,27 +195,34 @@ def main():
         else:
             print('hiányzó érték')
 
-    """
-    lemma                   DONE
-    xpostag                 DONE
-    upostag                 DONE
-    feats                   DONE
-    id, head, deprel        
-    NP-BIO                  
-    NER-BIO
-    zéróelem                
-    term                  
-    """
     if 'agree' in mode:
-        # agreement a tokenenkénti címkézési feladatokra
-        print('agree lemma')
-        agree.agree_tags(delta, columns['lemma'])
-        print('agree xpostag')
-        agree.agree_tags(delta, columns['xpostag'])
-        print('agree upostag')
-        agree.agree_tags(delta, columns['upostag'])
-        print('agree feats')
-        agree.agree_tags(delta, columns['feats'])
+
+        # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
+        tasks = get_tasks(columns)
+
+        # az egyes feladatokat elvégzi a megfelelő mezőkkel
+        for column, task in tasks.items():
+
+            if 'tagagree' in task:
+                # agreement a tokenenkénti címkézési feladatokra
+                print('{} agreement'.format(get_column_name(columns, column)))
+                agree.agree_tags(delta, column)
+                oa, s, pi, kappa, w_kappa, alpha = agree.agree_tags(delta, column)
+                print('observed agreement: {0:.2%}'.format(oa))
+                print('S: {0:.2%}'.format(s))
+                print('pi: {0:.2%}'.format(pi))
+                print('kappa: {0:.2%}'.format(kappa))
+                print('weigthed kappa: {0:.2%}'.format(w_kappa))
+                print('alpha: {0:.2%}'.format(alpha))
+
+            if 'depagree' in task:
+                print('dependency agreement')
+                head = columns['head']
+                deprel = columns['deprel']
+                uaa, laa, loa = agree.agree_dep(delta, head, deprel)
+                print('UAA (unlabeled attachment agreement): {0:.2%}'.format(uaa))
+                print('LAA (labeled attachment agreement): {0:.2%}'.format(laa))
+                print('LOA (label only agreement): {0:.2%}'.format(loa))
 
 
 if __name__ == "__main__":
