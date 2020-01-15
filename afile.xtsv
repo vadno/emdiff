@@ -24,3 +24,10 @@ lejunkolta	lejunkol	[/V][Pst.Def.3Sg]	O	O	VERB	Definite=Def|Mood=Ind|Number=Sing
 a	a	[/Det|Art.Def]	B-NP	O	DET	Definite=Def|PronType=Art	4	DET	5	(NP*
 blágrót	blágró	[/N][Acc]	E-NP	O	NOUN	Case=Acc|Number=Sing	5	OBJ	3	*)
 .	.	[Punct]	O	O	PUNCT	_	6	PUNCT	0	*))
+
+A	a	[/Det|Art.Def]	B-NP	B-MISC	DET	Definite=Def|PronType=Art	1	DET	2	(ROOT(CP(NP*
+vrátosz	vrátosz	[/N][Nom]	E-NP	E-MISC	NOUN	Case=Nom|Number=Sing	2	SUBJ	3	*)
+lejunkolta	lejunkol	[/V][Pst.Def.3Sg]	O	O	VERB	Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act	3	ROOT	0	(NP*)
+a	a	[/Det|Art.Def]	B-NP	O	DET	Definite=Def|PronType=Art	4	DET	5	(NP*
+blágrót	blágró	[/N][Acc]	E-NP	O	NOUN	Case=Acc|Number=Sing	5	OBJ	3	*)
+.	.	[Punct]	O	O	PUNCT	_	6	PUNCT	0	*))

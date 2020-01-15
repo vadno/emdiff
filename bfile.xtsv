@@ -25,3 +25,10 @@ vrátosz	vrátosz	[/N][Nom]	E-NP	NOUN	Case=Nom|Number=Sing	I-MISC	2	SUBJ	3	*)
 lejunkolta	lejunkol	[/V][Pst.Def.3Sg]	O	VERB	Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act	E-MISC	3	ROOT	0	(NP*)
 blágrót	blágró	[/N][Acc]	1-NP	NOUN	Case=Acc|Number=Sing	O	4	OBJ	3	(NP*)
 .	.	[Punct]	O	PUNCT	_	O	5	PUNCT	0	*))
+
+A	a	[/Det|Art.Def]	B-NP	DET	Definite=Def|PronType=Art	B-MISC	1	DET	2	(ROOT(CP(NP*
+vrátosz	vrátosz	[/N][Nom]	E-NP	NOUN	Case=Nom|Number=Sing	I-MISC	2	SUBJ	5	*)
+lejunkolta	lejunkol	[/V][Pst.Def.3Sg]	O	VERB	Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act	E-MISC	3	ROOT	0	(NP*)
+a	a	[/Det|Art.Def]	B-NP	DET	Definite=Def|PronType=Art	O	4	DET	5	(NP*
+blágrót	blágró	[/N][Acc]	1-NP	NOUN	Case=Acc|Number=Sing	O	4	OBL	3	(NP*)
+.	.	[Punct]	O	PUNCT	_	O	5	PUNCT	0	*))
