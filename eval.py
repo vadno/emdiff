@@ -16,11 +16,6 @@ def eval_tags_bytag(delta, column):
 
 def eval_tags(delta, column):
     """
-    lemma
-    xpostag
-    upostag
-    feats
-
     :param delta:
     :param column:
     :return:
@@ -36,8 +31,7 @@ def eval_tags(delta, column):
                 pass
             total += 1
 
-    # accuracy = num_tokens_correct / total_num_tokens_from_gold
-    return tp/total
+    return tp/total     # accuracy = num_tokens_correct / total_num_tokens_from_gold
 
 
 def eval_chunks(delta, column):
@@ -71,7 +65,7 @@ def eval_chunks(delta, column):
     FP: the number of chunks (NOT TOKENS!!!) that are guessed but they are wrong
     TN: the number of chunks (NOT TOKENS!!!) that are not guessed by the system
     prec = tp / fp + tp
-    reca = tp / fn + tp
+    rec = tp / fn + tp
     f1 = 2 * (prec * rec / (prec + rec))
 
     :param delta:
@@ -143,11 +137,16 @@ def eval_chunks(delta, column):
 
 
 def process_sentence(sent, head, deprel):
+    """
 
-    # Percentage of words that get the correct head and label
-    # LAS
-    # Percentage of words that get the correct head
-    # UAS
+    :param sent:
+    :param head:
+    :param deprel:
+    :return:
+    """
+
+    # LAS: Percentage of words that get the correct head and label
+    # UAS: Percentage of words that get the correct head
 
     corr = 0
     corrl = 0
@@ -166,23 +165,16 @@ def process_sentence(sent, head, deprel):
     return corrl / total, corr / total
 
 
-def eval_deps(delta, column, head, deprel):
+def eval_deps(delta, head, deprel):
     """
     kiértékeli a függőségi elemzést
     :param delta:
-    :param column:
     :param head:
     :param deprel:
     :return:
     """
-    #
-    # for line in delta:
-    #     print(line[0][column[0]], line[1][column[1]])
-    #     print(line[0][head[0]], line[1][head[1]])
-    #     print(line[0][deprel[0]], line[1][deprel[1]])
 
     sent = list()
-    tokenerror = False
     las = None
     uas = None
 
@@ -190,19 +182,61 @@ def eval_deps(delta, column, head, deprel):
 
         if 'newsent' not in line[0]:
 
-            # TODO kivenni a nem egyformán tokenizált mondatokat
-            if line[0] == '+' or line[1] == '-':
-                tokenerror = True
-
             if line[0] != '+' and line[1] != '-':
                 sent.append(line)
 
         elif 'newsent' in line[0]:
             process_sentence(sent, head, deprel)
-            tokenerror = False
             sent = list()
 
     if sent:
         las, uas = process_sentence(sent, head, deprel)
 
     return las, uas
+
+
+def iszero(dep_id):
+
+    if '.' in dep_id and dep_id.split('.')[1] in ('SUBJ', 'OBJ', 'POSS'):
+        return True
+
+
+def get_dep_type(dep_id):
+
+    return dep_id.split('.')[1]
+
+
+def eval_zero(delta, column):
+
+    tp = 0
+    fp = 0
+    fn = 0
+    fp_hits = list()
+    fn_hits = list()
+
+    for line in delta:
+        if line[0] != '+' and line[1] != '-':
+            if iszero(line[0][column[0]]) and iszero(line[1][column[1]]):
+                gold_type = get_dep_type(line[0][column[0]])
+                sys_type = get_dep_type(line[1][column[1]])
+                if gold_type and sys_type and gold_type == sys_type:
+                    tp += 1
+        elif line[0] == '+' and iszero(line[1][column[1]]):
+            fp += 1
+            fp_hits.append(line)
+        elif line[1] == '-' and iszero(line[0][column[0]]):
+            fn += 1
+            fn_hits.append(line)
+
+    prec = None
+    rec = None
+    f1 = None
+
+    # print(tp, fp, fn)
+
+    if tp:
+        prec = tp/(tp+fp)
+        rec = tp/(tp+fn)
+        f1 = 2*(prec*rec/(prec+rec))
+
+    return prec, rec, f1
