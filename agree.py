@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from nltk.metrics.agreement import AnnotationTask   # https://www.nltk.org/_modules/nltk/metrics/agreement.html
 
 
