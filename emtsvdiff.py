@@ -27,6 +27,9 @@ FIELD_MAP = {
 
 def get_column(header, field):
 
+    # Balázs ezzel itt valami probléma van
+    # return next(key for key in header.keys() if (header[key] == field), DEFAULT)
+
     return [key for key in header.keys() if (header[key] == field)][0]
 
 
@@ -43,9 +46,7 @@ def proc_fields(a_fields, b_fields):
     # közös mezők a fejlécben
     common_fields = set(a_fields.values()) | set(b_fields.values())
 
-    columns = dict()
-    for field in common_fields:
-        columns[field] = (get_column(a_fields, field), get_column(b_fields, field))
+    columns = {field: (get_column(a_fields, field), get_column(b_fields, field)) for field in common_fields}
 
     return columns
 
@@ -57,17 +58,14 @@ def get_tasks(columns):
     :return:
     """
     # feladatok a mezőknek megfeleltetve
-    tasks = dict()
-    for field, cols in columns.items():
-        if field in FIELD_MAP:
-            tasks[cols] = FIELD_MAP[field]
+    tasks = {cols: FIELD_MAP[field] for field, cols in columns.items() if field in FIELD_MAP}
 
     return tasks
 
 
 def get_header(infile):
 
-    with open(infile, 'r') as inf:
+    with open(infile, encoding='utf-8') as inf:
         header = {i: name for i, name in enumerate(inf.readline().strip().split())}
 
     return header, len(header)
@@ -85,7 +83,7 @@ def read_file(infile, length):
 
     lines = list()
 
-    with open(infile, 'r') as inf:
+    with open(infile, encoding='utf-8') as inf:
 
         # itt csak beolvassa a headert de nem menti el (már megvan)
         inf.readline().strip().split()
@@ -124,10 +122,10 @@ def main():
     # megkérdezi a felhasználót, hogy melyik üzemmódot szeretné
     # beszedi a két össszehasonlítandó fájl relatív elérését
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--mode", required=True, action="append", help="Select mode! (eval, zeroeval, agree)",
+    parser.add_argument('-m', '--mode', required=True, action='append', help='Select mode! (eval, zeroeval, agree)',
                         default=[])
-    parser.add_argument("-f1", "--file1", required=True, type=str, help="File 1")
-    parser.add_argument("-f2", "--file2", required=True, type=str, help="File 2")
+    parser.add_argument('-f1', '--file1', required=True, type=str, help='File 1 (gold/annotator1)')
+    parser.add_argument('-f2', '--file2', required=True, type=str, help='File 2 (to evaluate/annotator2)')
 
     args = parser.parse_args()
     mode = args.mode
