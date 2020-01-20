@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from sklearn import metrics
+from nltk.metrics import ConfusionMatrix
 
 
 def measures(tp, fp, fn, weight):
@@ -16,16 +17,27 @@ def measures(tp, fp, fn, weight):
 def eval_tags_bytag(delta, column):
 
     gold = list()
-    pred = list()
+    test = list()
 
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         if col1 != '+' and col2 != '-' and 'newsent' not in col1:
             gold.append(col1[column[0]])
-            pred.append(col2[column[1]])
+            test.append(col2[column[1]])
 
-    print(metrics.classification_report(gold, pred))
+    print(metrics.classification_report(gold, test))
+
+
+def confusion(delta, column):
+
+    gold = list()
+    test = list()
+    for col1, col2 in delta:
+        if col1 != '+' and col2 != '-' and 'newsent' not in col1:
+            gold.append(col1[column[0]])
+            test.append(col2[column[1]])
+
+    cm = ConfusionMatrix(gold, test)
+    return cm
 
 
 def eval_tags(delta, column):
@@ -37,9 +49,7 @@ def eval_tags(delta, column):
     total = 0
     tp = 0
 
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         if col1 != '+' and col2 != '-' and 'newsent' not in col1:
             tp += int(col1[column[0]] == col2[column[1]])
             total += 1
@@ -96,9 +106,7 @@ def eval_chunks(delta, column):
     # lepteto a tobbelemu chunkokhoz
     further = False
 
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         # csak az egyforma tokenizalasu sorokat nezzuk
         if col1 != '+' and col2 != '-' and 'newsent' not in col1:
             total_tok += 1
@@ -163,9 +171,7 @@ def process_sentence(sent, head, deprel):
     corrl = 0
     total = 0
 
-    for line in sent:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in sent:
         if 'newsent' not in col1:
             total += 1
             if col1[head[0]] == col2[head[1]]:
@@ -188,11 +194,9 @@ def eval_deps(delta, head, deprel):
     las = None
     uas = None
 
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         if 'newsent' not in col1 and col1 != '+' and col2 != '-':
-            sent.append(line)
+            sent.append([col1, col2])
 
         elif 'newsent' in col1:
             process_sentence(sent, head, deprel)
@@ -222,21 +226,19 @@ def eval_zero(delta, column):
     fp_hits = list()
     fn_hits = list()
 
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         if 'newsent' not in col1:
             if col1 != '+' and col2 != '-':
                 if iszero(col1[column[0]]) and iszero(col2[column[1]]):
                     gold_type = get_dep_type(col1[column[0]])
-                    sys_type = get_dep_type(col2[column[1]])
-                    tp += int(gold_type and sys_type and gold_type == sys_type)
+                    test_type = get_dep_type(col2[column[1]])
+                    tp += int(gold_type and test_type and gold_type == test_type)
             elif col1 == '+' and iszero(col2[column[1]]):
                 fp += 1
-                fp_hits.append(line)
+                fp_hits.append([col1, col2])
             elif col2 == '-' and iszero(col1[column[0]]):
                 fn += 1
-                fn_hits.append(line)
+                fn_hits.append([col1, col2])
 
     prec = None
     rec = None
