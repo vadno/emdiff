@@ -65,21 +65,14 @@ def count_token(delta):
     print('file_b token number:', fileb)
 
 
-def diff_tokens(delta):
-    """
-    listázza a csak az egyik vagy csak a másik fájlban szereplő tokeneket
-    :param delta:
-    :return:
-    """
-
-    filea = list()
-    fileb = list()
+def printdiff(delta, column):
 
     for col1, col2 in delta:
         if col1 == '+':
-            fileb.append(col2[0])
+            print('+', col2[column[1]], sep='\t')
         elif col2 == '-':
-            filea.append(col1[0])
-
-    print('file_a tokens', filea)
-    print('file_b tokens', fileb)
+            print(col1[column[0]], '-', sep='\t')
+        elif 'newsent' in col1:
+            print('')
+        else:
+            print(col1[column[0]], col2[column[1]], sep='\t')

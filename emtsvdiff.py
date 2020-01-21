@@ -119,8 +119,8 @@ def main():
     # megkérdezi a felhasználót, hogy melyik üzemmódot szeretné
     # beszedi a két össszehasonlítandó fájl relatív elérését
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--mode', required=True, action='append', help='Select mode! (eval, zeroeval, agree)',
-                        choices={'eval', 'zeroeval', 'agree'}, default=[])
+    parser.add_argument('-m', '--mode', required=True, action='append', help='Select mode! (eval, zeroeval, agree, printdiff)',
+                        choices={'eval', 'zeroeval', 'agree', 'printdiff'}, default=[])  # TODO printdiff
     parser.add_argument('-f1', '--file1', required=True, type=str, help='File 1 (gold/annotator1)')
     parser.add_argument('-f2', '--file2', required=True, type=str, help='File 2 (to evaluate/annotator2)')
 
@@ -143,8 +143,9 @@ def main():
     # elkészíti a deltát, ahol meg vannak jelölve a tokenkülönbségek
     # ehhez a 'form' oszlopot használja
     delta = diff.differ(filea_lines, fileb_lines, columns['form'])
-    # diff.count_token(delta)
-    # diff.diff_tokens(delta)
+
+    if 'printdiff' in mode:
+        print(diff.printdiff(delta, columns['form']))
 
     if 'eval' in mode:
         # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
