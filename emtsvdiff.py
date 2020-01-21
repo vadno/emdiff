@@ -15,22 +15,19 @@ import argparse
 FIELD_MAP = {
     'form': {'tokendiff'},
     'lemma': {'tagacc', 'tagagree'},
-    'xpostag': {'tageval', 'tagacc', 'tagagree'},
-    'upostag': {'tageval', 'tagacc', 'tagagree'},
-    'feats': {'tageval', 'tagacc', 'tagagree'},
+    'xpostag': {'tageval', 'confusion', 'tagacc', 'tagagree'},
+    'upostag': {'tageval', 'confusion', 'tagacc', 'tagagree'},
+    'feats': {'tageval', 'confusion', 'tagacc', 'tagagree'},
     'NP-BIO': {'chunkeval'},
     'NER-BIO': {'chunkeval'},
     'id': {'depeval', 'depagree'},
-    'cons': {'tageval', 'tagacc', 'tagagree'}
+    'cons': {'tageval', 'confusion', 'tagacc', 'tagagree'}
 }
 
 
 def get_column(header, field):
 
-    # Balázs ezzel itt valami probléma van
-    # return next(key for key in header.keys() if (header[key] == field), DEFAULT)
-
-    return [key for key in header.keys() if (header[key] == field)][0]
+    return next(key for key in header.keys() if (header[key] == field))
 
 
 def proc_fields(a_fields, b_fields):
@@ -123,7 +120,7 @@ def main():
     # beszedi a két össszehasonlítandó fájl relatív elérését
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--mode', required=True, action='append', help='Select mode! (eval, zeroeval, agree)',
-                        default=[])
+                        choices={'eval', 'zeroeval', 'agree'}, default=[])
     parser.add_argument('-f1', '--file1', required=True, type=str, help='File 1 (gold/annotator1)')
     parser.add_argument('-f2', '--file2', required=True, type=str, help='File 2 (to evaluate/annotator2)')
 
@@ -164,6 +161,10 @@ def main():
             if 'tageval' in task:
                 print(get_column_name(columns, column))
                 eval.eval_tags_bytag(delta, column)
+
+            if 'confusion' in task:
+                print('{} confusion matrix'.format(get_column_name(columns, column)))
+                print(eval.confusion(delta, column))
 
             if 'chunkeval' in task:
                 colname = get_column_name(columns, column)
@@ -223,5 +224,5 @@ def main():
                 print('LOA (label only agreement): {0:.2%}'.format(loa))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

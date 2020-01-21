@@ -18,9 +18,7 @@ def reverse_tags(delta, column):
     """
 
     by_tokens = list()
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         if col1 != '+' and col2 != '-' and 'newsent' not in col1:
             by_tokens.append(['g', col1[0], col1[column[0]]])
             by_tokens.append(['s', col2[0], col2[column[1]]])
@@ -38,9 +36,7 @@ def reverse_deps(delta, head, deprel):
     """
 
     by_deps = list()
-    for line in delta:
-        col1 = line[0]
-        col2 = line[1]
+    for col1, col2 in delta:
         if col1 != '+' and col2 != '-' and 'newsent' not in col1:
             by_deps.append(((col1[head[0]], col1[deprel[0]]), (col2[head[1]], col2[deprel[1]])))
 

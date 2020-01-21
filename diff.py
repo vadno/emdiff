@@ -55,10 +55,10 @@ def count_token(delta):
 
     filea = len(delta)
     fileb = len(delta)
-    for line in delta:
-        if line[0] == '+':
+    for col1, col2 in delta:
+        if col1 == '+':
             filea -= 1
-        elif line[1] == '-':
+        elif col2 == '-':
             fileb -= 1
 
     print('file_a token number:', filea)
@@ -75,11 +75,11 @@ def diff_tokens(delta):
     filea = list()
     fileb = list()
 
-    for line in delta:
-        if line[0] == '+':
-            fileb.append(line[1][0])
-        elif line[1] == '-':
-            filea.append(line[0][0])
+    for col1, col2 in delta:
+        if col1 == '+':
+            fileb.append(col2[0])
+        elif col2 == '-':
+            filea.append(col1[0])
 
     print('file_a tokens', filea)
     print('file_b tokens', fileb)
