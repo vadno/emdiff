@@ -1,0 +1,93 @@
+                                                                             |               D   D D D   |
+                                                                             |               e   e e e   |
+                                                                             |               f   f f f   |
+                                                                             |               i   i i i   |
+                                                                             |               n   n n n   |
+                                                                             |               i   i i i   |
+                                                                             |               t   t t t   |
+                                                                             |               e   e e e   |
+                                                                             |               =   = = =   |
+                                                                             |               D   I I I   |
+                                                                             |               e   n n n   |
+                                                                             |               f   d d d   |
+                                                                             |               |   | | |   |
+                                                                             |               M   M M M   |
+                                                                             |               o   o o o   |
+                                                                             |               o   o o o   |
+                                                                             |               d   d d d   |
+                                                                             |               =   = = =   |
+                                                                             |               I   I I I   |
+                                                                             |               n   n n n   |
+                                                                             |               d   d d d   |
+                                                                             |               |   | | |   |
+                                                                             |               N   N N N   |
+                                                                             |             C u   u u u   |
+                                                                             |             a m   m m m   |
+                                                                             |             s b   b b b   |
+                                                                             |             e e   e e e   |
+                                                                             |             = r   r r r   |
+                                                                             |             N =   = = =   |
+                                                                             |             o S   S S S   |
+                                                                             |             m i   i i i   |
+                                                                             |             | n   n n n   |
+                                                                             |             N g   g g g   |
+                                                                             |             u |   | | |   |
+                                                                             |     C       m P   P P P   |
+                                                                             |     a       b e   e e e   |
+                                                                             |     s       e r   r r r   |
+                                                                             |     e       r s   s s s   |
+                                                                             |     =       = o   o o o   |
+                                                                             |     G       S n   n n n   |
+                                                                             |     e       i =   = = =   |
+                                                                             |     n       n 3   1 3 3   |
+                                                                             |     |       g |   | | |   |
+                                                                             |   C N       | T   T T T   |
+                                                                             |   a u       N e   e e e   |
+                                                                             |   s m   C   u n   n n n   |
+                                                                             |   e b   a   m s   s s s   |
+                                                                             |   = e   s   b e   e e e   |
+                                                                             |   A r   e   e =   = = =   |
+                                                                             |   c =   =   r P   P P P   |
+                                                                             |   c P   N   [ a   a a r   |
+                                                                             |   | l   o   p s D s s e   |
+                                                                             |   N u   m   s t e t t s   |
+                                                                             |   u r   |   o | f | | |   |
+                                                                             |   m |   D   r V i V V V   |
+                                                                             |   b P   e   ] e n e e e   |
+                                                                             | C e e C g C = r i r r r   |
+                                                                             | a r r a r a P b t b b b   |
+                                                                             | s = s s e s l F e F F F   |
+                                                                             | e S o e e e u o = o o o   |
+                                                                             | = i n = = = r r D r r r   |
+                                                                             | A n = I P N | m e m m m   |
+                                                                             | c g 1 n o o P = f = = =   |
+                                                                             | c | | e s m e F | F F F   |
+                                                                             | | N P | | | r i P i i i   |
+                                                                             | N u r N N N s n r n n n   |
+                                                                             | u m o u u u o | o | | |   |
+                                                                             | m T n m m m n V n V V V   |
+                                                                             | b y T b b b [ o T o o o   |
+                                                                             | e p y e e e p i y i i i   |
+                                                                             | r e p r r r s c p c c c   |
+                                                                             | = = e = = = o e e e e e   |
+                                                                             | S C = S S S r = = = = =   |
+                                                                             | i a P i i i ] A A A A A   |
+                                                                             | n r r n n n = c r c c c   |
+                                                                             | g d s g g g 1 t t t t t _ |
+-----------------------------------------------------------------------------+---------------------------+
+                                                        Case=Acc|Number=Sing |<3>. . . . . . . . . . . . |
+                                           Case=Acc|Number=Sing|NumType=Card | .<.>. . . . . . . . . . 1 |
+                                  Case=Gen|Number=Plur|Person=1|PronType=Prs | . .<1>. . . . . . . . . . |
+                                                        Case=Ine|Number=Sing | . . .<1>. . . . . . . . . |
+                                             Case=Nom|Degree=Pos|Number=Sing | . . . .<1>. . . . . . . . |
+                                                        Case=Nom|Number=Sing | . . . . .<3>. . . . . . . |
+                       Case=Nom|Number=Sing|Number[psor]=Plur|Person[psor]=1 | . . . . . .<1>. . . . . . |
+Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act | . . . . . . .<2>. . . . . |
+                                                   Definite=Def|PronType=Art | . . . . . . . .<3>. . . . |
+Definite=Ind|Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin|Voice=Act | . . . . . . . . .<1>. . . |
+Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act | . . . . . . . . . .<1>. . |
+Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act | . . . . . . . . . . .<1>. |
+                                                                           _ | . . . . . . . . . . . .<6>|
+-----------------------------------------------------------------------------+---------------------------+
+(row = reference; col = test)
+

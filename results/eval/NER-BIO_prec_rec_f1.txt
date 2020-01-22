@@ -1,0 +1,4 @@
+IOB-accuracy:  0.8
+precision:  0.4
+recall:  1.0
+f-measure:  0.5714285714285715

@@ -1,0 +1,20 @@
+                                                                              precision    recall  f1-score   support
+
+                                                        Case=Acc|Number=Sing       1.00      1.00      1.00         3
+                                           Case=Acc|Number=Sing|NumType=Card       0.00      0.00      0.00         1
+                                  Case=Gen|Number=Plur|Person=1|PronType=Prs       1.00      1.00      1.00         1
+                                                        Case=Ine|Number=Sing       1.00      1.00      1.00         1
+                                             Case=Nom|Degree=Pos|Number=Sing       1.00      1.00      1.00         1
+                                                        Case=Nom|Number=Sing       1.00      1.00      1.00         3
+                       Case=Nom|Number=Sing|Number[psor]=Plur|Person[psor]=1       1.00      1.00      1.00         1
+Definite=Def|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act       1.00      1.00      1.00         2
+                                                   Definite=Def|PronType=Art       1.00      1.00      1.00         3
+Definite=Ind|Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin|Voice=Act       1.00      1.00      1.00         1
+Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act       1.00      1.00      1.00         1
+Definite=Ind|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act       1.00      1.00      1.00         1
+                                                                           _       0.86      1.00      0.92         6
+
+                                                                    accuracy                           0.96        25
+                                                                   macro avg       0.91      0.92      0.92        25
+                                                                weighted avg       0.93      0.96      0.94        25
+

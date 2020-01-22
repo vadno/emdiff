@@ -1,0 +1,22 @@
+                     precision    recall  f1-score   support
+
+        [/Adj][Nom]       1.00      1.00      1.00         1
+             [/Adv]       1.00      1.00      1.00         1
+     [/Det|Art.Def]       1.00      1.00      1.00         3
+          [/N][Acc]       1.00      1.00      1.00         3
+          [/N][Ine]       1.00      1.00      1.00         1
+          [/N][Nom]       1.00      1.00      1.00         3
+[/N][Poss.1Pl][Nom]       1.00      1.00      1.00         1
+        [/Num][Acc]       0.00      0.00      0.00         1
+ [/N|Pro][1Pl][Gen]       1.00      1.00      1.00         1
+            [/Prev]       0.00      0.00      0.00         0
+ [/V][Prs.NDef.3Sg]       1.00      1.00      1.00         1
+  [/V][Pst.Def.3Sg]       1.00      1.00      1.00         2
+ [/V][Pst.NDef.1Sg]       1.00      1.00      1.00         1
+ [/V][Pst.NDef.3Sg]       1.00      1.00      1.00         1
+            [Punct]       1.00      1.00      1.00         5
+
+           accuracy                           0.96        25
+          macro avg       0.87      0.87      0.87        25
+       weighted avg       0.96      0.96      0.96        25
+
