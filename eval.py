@@ -24,7 +24,7 @@ def eval_tags_bytag(delta, column):
             gold.append(col1[column[0]])
             test.append(col2[column[1]])
 
-    print(metrics.classification_report(gold, test))
+    return metrics.classification_report(gold, test)
 
 
 def confusion(delta, column):

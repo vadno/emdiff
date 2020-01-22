@@ -46,33 +46,16 @@ def differ(filea, fileb, column):
     return zipped
 
 
-def count_token(delta):
-    """
-    megszámolja a tokenszámokat
-    :param delta:
-    :return:
-    """
-
-    filea = len(delta)
-    fileb = len(delta)
-    for col1, col2 in delta:
-        if col1 == '+':
-            filea -= 1
-        elif col2 == '-':
-            fileb -= 1
-
-    print('file_a token number:', filea)
-    print('file_b token number:', fileb)
-
-
 def printdiff(delta, column):
 
-    for col1, col2 in delta:
-        if col1 == '+':
-            print('+', col2[column[1]], sep='\t')
-        elif col2 == '-':
-            print(col1[column[0]], '-', sep='\t')
-        elif 'newsent' in col1:
-            print('')
-        else:
-            print(col1[column[0]], col2[column[1]], sep='\t')
+    with open('results/diff.tsv', 'w') as of:
+
+        for col1, col2 in delta:
+            if col1 == '+':
+                print('+', col2[column[1]], sep='\t', file=of)
+            elif col2 == '-':
+                print(col1[column[0]], '-', sep='\t', file=of)
+            elif 'newsent' in col1:
+                print('', file=of)
+            else:
+                print(col1[column[0]], col2[column[1]], sep='\t', file=of)

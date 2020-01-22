@@ -145,7 +145,7 @@ def main():
     delta = diff.differ(filea_lines, fileb_lines, columns['form'])
 
     if 'printdiff' in mode:
-        print(diff.printdiff(delta, columns['form']))
+        diff.printdiff(delta, columns['form'])
 
     if 'eval' in mode:
         # meghatározza, hogy milyen feladatokat kell elvégezni az egyes mezőkkel
@@ -157,43 +157,54 @@ def main():
             if 'tagacc' in task:
                 colname = get_column_name(columns, column)
                 tagacc = eval.eval_tags(delta, column)
-                print(colname, 'accuracy: {0:.2%}'.format(tagacc))
+                filename = 'results/eval/' + colname + '_accuracy.txt'
+                with open(filename, 'w') as of:
+                    print(tagacc, file=of)
 
             if 'tageval' in task:
-                print(get_column_name(columns, column))
-                eval.eval_tags_bytag(delta, column)
+                colname = get_column_name(columns, column)
+                filename = 'results/eval/' + colname + '_prec_rec_f1_bytag.txt'
+                bytag = eval.eval_tags_bytag(delta, column)
+                with open(filename, 'w') as of:
+                    print(bytag, file=of)
 
             if 'confusion' in task:
-                print('{} confusion matrix'.format(get_column_name(columns, column)))
-                print(eval.confusion(delta, column))
+                colname = get_column_name(columns, column)
+                filename = 'results/eval/' + colname + '_confusion.txt'
+                confusion = eval.confusion(delta, column)
+                with open(filename, 'w') as of:
+                    print(confusion, file=of)
 
             if 'chunkeval' in task:
                 colname = get_column_name(columns, column)
+                filename = 'results/eval/' + colname + '_prec_rec_f1.txt'
                 acc, prec, rec, f1 = eval.eval_chunks(delta, column)
-                print(colname, 'IOB-accuracy: {0:.2%}'.format(acc))
-                print(colname, 'precision: {0:.2%}'.format(prec))
-                print(colname, 'recall: {0:.2%}'.format(rec))
-                print(colname, 'f-measure: {0:.2%}'.format(f1))
+                with open(filename, 'w') as of:
+                    print('IOB-accuracy: ', acc, file=of)
+                    print('precision: ', prec, file=of)
+                    print('recall: ', rec, file=of)
+                    print('f-measure: ', f1, file=of)
 
             if 'depeval' in task:
                 # head      ezt az oszlopot meg kell keresni
                 # deprel    ezt az oszlopot meg kell keresni
                 head = columns['head']
                 deprel = columns['deprel']
+                filename = 'results/eval/dependency_las_uas.txt'
                 las, uas = eval.eval_deps(delta, head, deprel)
-                print('dependency evaluation')
-                print('LAS: {0:.2%}'.format(las))
-                print('UAS: {0:.2%}'.format(uas))
+                with open(filename, 'w') as of:
+                    print('LAS: ', las, file=of)
+                    print('UAS: ', uas, file=of)
 
     if 'zeroeval' in mode:
 
         prec, rec, f1 = eval.eval_zero(delta, columns['id'])
         if prec and rec and f1:
-            print('precision: {0:.2%}'.format(prec))
-            print('recall: {0:.2%}'.format(rec))
-            print('f-measure: {0:.2%}'.format(f1))
-        else:
-            print('hiányzó érték')
+            filename = 'results/eval/zero_prec_rec_f1.txt'
+            with open(filename, 'w') as of:
+                print('precision: ', prec, file=of)
+                print('recall: ', rec, file=of)
+                print('f-measure: ', f1, file=of)
 
     if 'agree' in mode:
 
@@ -205,24 +216,27 @@ def main():
 
             if 'tagagree' in task:
                 # agreement a tokenenkénti címkézési feladatokra
-                print('{} agreement'.format(get_column_name(columns, column)))
+                colname = get_column_name(columns, column)
+                filename = 'results/agree/' + colname + '_agree.txt'
                 agree.agree_tags(delta, column)
                 oa, s, pi, kappa, w_kappa, alpha = agree.agree_tags(delta, column)
-                print('observed agreement: {0:.2%}'.format(oa))
-                print('S: {0:.2%}'.format(s))
-                print('pi: {0:.2%}'.format(pi))
-                print('kappa: {0:.2%}'.format(kappa))
-                print('weigthed kappa: {0:.2%}'.format(w_kappa))
-                print('alpha: {0:.2%}'.format(alpha))
+                with open (filename, 'w') as of:
+                    print('observed agreement: ', oa, file=of)
+                    print('S: ', s, file=of)
+                    print('pi: ', pi, file=of)
+                    print('kappa: ', kappa, file=of)
+                    print('weigthed kappa: ', w_kappa, file=of)
+                    print('alpha: ', alpha, file=of)
 
             if 'depagree' in task:
-                print('dependency agreement')
                 head = columns['head']
                 deprel = columns['deprel']
+                filename = 'results/agree/dependency_agree.txt'
                 uaa, laa, loa = agree.agree_dep(delta, head, deprel)
-                print('UAA (unlabeled attachment agreement): {0:.2%}'.format(uaa))
-                print('LAA (labeled attachment agreement): {0:.2%}'.format(laa))
-                print('LOA (label only agreement): {0:.2%}'.format(loa))
+                with open(filename, 'w') as of:
+                    print('UAA: ', uaa, file=of)
+                    print('LAA: ', laa, file=of)
+                    print('LOA: ', loa, file=of)
 
 
 if __name__ == '__main__':
