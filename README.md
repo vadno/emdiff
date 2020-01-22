@@ -33,7 +33,7 @@ Confusion matrix is available to certain fields (**xpostag**, **upostag**, **fea
 
 A `zeroeval` mód kiválasztásával az [emtsv](https://github.com/dlt-rilmta/emtsv) zérónévmásbeillesztő modulja, az [emZero](https://github.com/vadno/emzero) által produkált kimenet értékelhető ki. A kiértékelés mérőszámai: precision, recall, F-measure.
 
-### annotátorok közötti egyetértés
+### interannotator agreement
 
 By chosing `agree` mode interannotator agreement is calculable for certain tagging tasks of the following fields:
 
