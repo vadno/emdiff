@@ -156,29 +156,56 @@ def eval_chunks(delta, column):
     return acc, prec, rec, f1
 
 
-def process_sentence(sent, head, deprel):
-    """
-    LAS: Percentage of words that get the correct head and label
-    UAS: Percentage of words that get the correct head
+# def process_sentence(sent, head, deprel):
+#     """
+#     LAS: Percentage of words that get the correct head and label
+#     UAS: Percentage of words that get the correct head
+#
+#     :param sent:
+#     :param head:
+#     :param deprel:
+#     :return:
+#     """
+#
+#     corr = 0
+#     corrl = 0
+#     total = 0
+#
+#     for col1, col2 in sent:
+#         if 'newsent' not in col1:
+#             total += 1
+#             if col1[head[0]] == col2[head[1]]:
+#                 corr += 1
+#                 corrl += int(col1[deprel[0]] == col2[deprel[1]])
+#
+#     return corrl / total, corr / total
 
-    :param sent:
-    :param head:
-    :param deprel:
-    :return:
-    """
 
-    corr = 0
-    corrl = 0
-    total = 0
-
-    for col1, col2 in sent:
-        if 'newsent' not in col1:
-            total += 1
-            if col1[head[0]] == col2[head[1]]:
-                corr += 1
-                corrl += int(col1[deprel[0]] == col2[deprel[1]])
-
-    return corrl / total, corr / total
+# def eval_deps(delta, head, deprel):
+#     """
+#     kiértékeli a függőségi elemzést
+#     :param delta:
+#     :param head:
+#     :param deprel:
+#     :return:
+#     """
+#
+#     sent = list()
+#     las = None
+#     uas = None
+#
+#     for col1, col2 in delta:
+#         if 'newsent' not in col1 and col1 != '+' and col2 != '-':
+#             sent.append([col1, col2])
+#
+#         elif 'newsent' in col1:
+#             las, uas = process_sentence(sent, head, deprel)
+#             sent = list()
+#
+#     if sent:
+#         las, uas = process_sentence(sent, head, deprel)
+#
+#     return las, uas
 
 
 def eval_deps(delta, head, deprel):
@@ -194,17 +221,31 @@ def eval_deps(delta, head, deprel):
     las = None
     uas = None
 
+    corr = 0
+    corrl = 0
+    total = 0
+
     for col1, col2 in delta:
         if 'newsent' not in col1 and col1 != '+' and col2 != '-':
             sent.append([col1, col2])
 
         elif 'newsent' in col1:
-            las, uas = process_sentence(sent, head, deprel)
+            for c1, c2 in sent:
+                total += 1
+                if c1[head[0]] == c2[head[1]]:
+                    corr += 1
+                    corrl += int(c1[deprel[0]] == c2[deprel[1]])
+
             sent = list()
 
     if sent:
-        las, uas = process_sentence(sent, head, deprel)
+        for c1, c2 in sent:
+            total += 1
+            if c1[head[0]] == c2[head[1]]:
+                corr += 1
+                corrl += int(c1[deprel[0]] == c2[deprel[1]])
 
+    las, uas = corrl / total, corr / total
     return las, uas
 
 
