@@ -199,7 +199,7 @@ def eval_deps(delta, head, deprel):
             sent.append([col1, col2])
 
         elif 'newsent' in col1:
-            process_sentence(sent, head, deprel)
+            las, uas = process_sentence(sent, head, deprel)
             sent = list()
 
     if sent:
