@@ -1,2 +1,5 @@
 LAS:  0.88
 UAS:  0.96
+TOTAL:  25
+correct head:  24
+correct head and label:  22

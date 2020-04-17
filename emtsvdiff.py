@@ -191,10 +191,13 @@ def main():
                 head = columns['head']
                 deprel = columns['deprel']
                 filename = 'results/eval/dependency_las_uas.txt'
-                las, uas = eval.eval_deps(delta, head, deprel)
+                las, uas, total, corr, corrl = eval.eval_deps(delta, head, deprel)
                 with open(filename, 'w') as of:
                     print('LAS: ', las, file=of)
                     print('UAS: ', uas, file=of)
+                    print('TOTAL: ', total, file=of)
+                    print('correct head: ', corr, file=of)
+                    print('correct head and label: ', corrl, file=of)
 
     if 'zeroeval' in mode:
 

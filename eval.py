@@ -208,7 +208,7 @@ def eval_deps(delta, head, deprel):
 
     if total:
         las, uas = corrl / total, corr / total
-    return las, uas
+    return las, uas, total, corr, corrl
 
 
 def iszero(dep_id):
