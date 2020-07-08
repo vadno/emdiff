@@ -35,7 +35,7 @@ A `zeroeval` mód kiválasztásával az [emtsv](https://github.com/dlt-rilmta/em
 
 ### interannotator agreement
 
-By chosing `agree` mode interannotator agreement is calculable for certain tagging tasks of the following fields:
+By choosing `agree` mode interannotator agreement is calculable for certain tagging tasks of the following fields:
 
 * **lemma**
 * **xpostag**
