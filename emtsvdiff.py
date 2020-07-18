@@ -41,7 +41,7 @@ def proc_fields(a_fields, b_fields):
     """
 
     # közös mezők a fejlécben
-    common_fields = set(a_fields.values()) | set(b_fields.values())
+    common_fields = set(a_fields.values()) & set(b_fields.values())
 
     columns = {field: (get_column(a_fields, field), get_column(b_fields, field)) for field in common_fields}
 
