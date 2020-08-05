@@ -20,7 +20,7 @@ FIELD_MAP = {
     'feats': {'tageval', 'confusion', 'tagacc', 'tagagree'},
     'NP-BIO': {'chunkeval'},
     'NER-BIO': {'chunkeval'},
-    'id': {'depeval', 'depagree'},
+    'head': {'depeval', 'depagree'},    # TODO jó lesz a head?
     'cons': {'tageval', 'confusion', 'tagacc', 'tagagree'}
 }
 
