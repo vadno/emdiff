@@ -31,7 +31,7 @@ Confusion matrix is available to certain fields (**xpostag**, **upostag**, **fea
 
 #### `zeroeval`
 
-A `zeroeval` mód kiválasztásával az [emtsv](https://github.com/dlt-rilmta/emtsv) zérónévmásbeillesztő modulja, az [emZero](https://github.com/vadno/emzero) által produkált kimenet értékelhető ki. A kiértékelés mérőszámai: precision, recall, F-measure.
+`zeroeval` mode is for evaluating the performance of [emZero](https://github.com/vadno/emzero), a module of [emtsv](https://github.com/dlt-rilmta/emtsv) that inserts zero pronouns into the text. This mode uses the following measures: precision, recall, F-measure.
 
 ### interannotator agreement
 
